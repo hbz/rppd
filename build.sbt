@@ -1,9 +1,11 @@
-name := """lobid-gnd"""
+name := """rppd"""
 organization := "org.lobid"
 
 version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file(".")).enablePlugins(PlayJava)
+
+javacOptions ++= Seq("-source", "1.8", "-target", "1.8")
 
 EclipseKeys.projectFlavor := EclipseProjectFlavor.Java
 EclipseKeys.createSrc := EclipseCreateSrc.ValueSet(EclipseCreateSrc.ManagedClasses, EclipseCreateSrc.ManagedResources)
