@@ -501,7 +501,7 @@ public class HomeController extends Controller implements WSBodyReadables, WSBod
 			}
 			case JSON_LINES: {
 				response().setHeader("Content-Disposition",
-						String.format("attachment; filename=\"lobid-gnd-bulk-%s.jsonl\"", System.currentTimeMillis()));
+						String.format("attachment; filename=\"rppd-bulk-%s.jsonl\"", System.currentTimeMillis()));
 				return jsonLines(queryString, filter, response);
 			}
 			default: {
