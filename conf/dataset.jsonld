@@ -60,7 +60,7 @@
    },
    "distribution":[
       {
-         "id":"https://rpb.lbz-rlp.de/search",
+         "id":"https://rppd.lobid.org/search",
          "type":"WebAPI",
          "name": {
            "de": "RPPD-API",
@@ -70,8 +70,8 @@
          "en": "<p>The API gives access to machine-readable data (JSON-LD via HTTP).</p>",
          "de": "<p>Die API bietet Zugriff auf strukturierte Daten (JSON-LD via HTTP).</p>"
          },
-         "url":"https://rpb.lbz-rlp.de/search",
-         "documentation": "https://rpb.lbz-rlp.de/api",
+         "url":"https://rppd.lobid.org/search",
+         "documentation": "https://rppd.lobid.org/api",
          "encodingFormat":[
             "application/json",
             "application/ld+json"
