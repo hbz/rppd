@@ -18,7 +18,7 @@
       },
       "Concept": "http://www.w3.org/2004/02/skos/core#Concept"
    },
-   "id":"https://rpb.lbz-rlp.de/dataset#!",
+   "id":"https://rppd.lobid.org/dataset#!",
    "type":"Dataset",
    "name":{
       "de":"RPPD"
