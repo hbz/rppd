@@ -17,7 +17,9 @@ import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.TreeSet;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Function;
 import java.util.function.IntFunction;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -36,10 +38,11 @@ import controllers.HomeController;
 import play.Logger;
 import play.libs.Json;
 import play.libs.ws.WSClient;
+import play.libs.ws.WSRequest;
 import play.libs.ws.WSResponse;
 
 public class AuthorityResource {
-	
+
 	public static final String ID = "AuthorityResource";
 	private static final int SHORTEN = 5;
 	public static final String DNB_PREFIX = "https://d-nb.info/";
@@ -183,7 +186,56 @@ public class AuthorityResource {
 					.collect(Collectors.joining(" | "));
 			result.add(Pair.of(field, value));
 		}
+		Pair<String, String> rpbAndBiblioVinoLinks = rpbAndBiblioVinoLinks();
+		if (!rpbAndBiblioVinoLinks.getRight().isEmpty()) {
+			result.add(rpbAndBiblioVinoLinks);
+		}
 		return result;
+	}
+
+	private Pair<String, String> rpbAndBiblioVinoLinks() {
+		List<Pair<String, String>> templates = Arrays.asList(
+				Pair.of("Literatur von %s in der RPB", "https://rpb.lbz-rlp.de/search?person=%s"),
+				Pair.of("Literatur über %s in der RPB", "https://rpb.lbz-rlp.de/search?subject=%s"),
+				Pair.of("Literatur von %s in BiblioVino", "https://wein.lbz-rlp.de/search?person=%s"),
+				Pair.of("Literatur über %s in BiblioVino", "https://wein.lbz-rlp.de/search?subject=%s"));
+		return Pair.of("Literatur", templates.stream()
+				.map(toLabelAndSearchUrl())
+				.filter(withHits())
+				.map(toHtmlLink())
+				.collect(Collectors.joining(" | ")));
+	}
+
+	private Function<Pair<String, String>, Pair<String, String>> toLabelAndSearchUrl() {
+		return (Pair<String, String> labelTemplateAndUrlTemplate) -> {
+			String[] lastAndFirstName = preferredName.split(", ");
+			String name = lastAndFirstName[1] + " " + lastAndFirstName[0];
+			return Pair.of(
+					String.format(labelTemplateAndUrlTemplate.getLeft(), name),
+					String.format(labelTemplateAndUrlTemplate.getRight(), id));
+		};
+	}
+
+	private Predicate<Pair<String, String>> withHits() {
+		return (Pair<String, String> labelAndSearchUrl) -> {
+			try {
+				WSRequest rpbRequest = httpClient.url(labelAndSearchUrl.getRight()).addQueryParameter("format", "json");
+				int hits = rpbRequest.get().thenApply(WSResponse::asJson).toCompletableFuture().get().get("totalItems")
+						.intValue();
+				return hits > 0;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false;
+			}
+		};
+	}
+
+	private Function<Pair<String, String>, String> toHtmlLink() {
+		return (Pair<String, String> labelAndSearchUrl) -> {
+			return String.format("<a href='%s' target='_blank'>%s</a>",
+					labelAndSearchUrl.getRight(),
+					labelAndSearchUrl.getLeft());
+		};
 	}
 
 	public List<Pair<String, String>> summaryFields() {
