@@ -115,6 +115,8 @@ public class GndOntology {
 	 */
 	public static String label(String id) {
 		try {
+			String gndIdPattern = "1[0123]?\\d{7}[0-9X]|[47]\\d{6}[-n]\\d|[1-9]\\d{0,7}[-n][0-9X]|3\\d{7}[0-9X]";
+			id = id.matches(gndIdPattern) ? AuthorityResource.GND_PREFIX + id.replaceAll("n", "-") : id;
 			return id.startsWith(AuthorityResource.GND_PREFIX) ? indexLabel(id) : ontologyLabel(id);
 		} catch (Exception e) {
 			Logger.error("Could not get label for {}: {}", id, e.getMessage());
