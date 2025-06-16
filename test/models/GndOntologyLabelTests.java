@@ -37,7 +37,12 @@ public class GndOntologyLabelTests {
 				{ "broadMatch", "Oberbegriff" }, //
 				{ "exactMatch", "Entspricht" }, //
 				{ "relatedMatch", "Verwandter Begriff" }, //
-				{ "SubjectHeadingSensoStricto", "Schlagwort sensu stricto" } });
+				{ "SubjectHeadingSensoStricto", "Schlagwort sensu stricto" }, //
+				{ "https://d-nb.info/gnd/118820591", "Weizenbaum, Joseph" }, //
+				{ "118820591", "Weizenbaum, Joseph" }, //
+				{ "https://d-nb.info/gnd/7855044-0", "Lamassu" }, //
+				{ "7855044-0", "Lamassu" }, //
+				{ "7855044n0", "Lamassu" } });
 	}
 
 	private String id;
