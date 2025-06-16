@@ -45,7 +45,7 @@
 }
 
 @labelFrom(v: JsValue) = @{
-	v.asOpt[String].getOrElse((v\"label").asOpt[String].getOrElse((v\"id").asOpt[String].getOrElse("")))
+	models.GndOntology.label(v.asOpt[String].getOrElse((v\"label").asOpt[String].getOrElse((v\"id").asOpt[String].getOrElse(""))))
 }
 
 @field(types: Seq[String], t: String, doc: play.api.libs.json.JsValue, field: String) = {
