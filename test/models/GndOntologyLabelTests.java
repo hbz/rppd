@@ -12,8 +12,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import modules.IndexTest;
+
 @RunWith(Parameterized.class)
-public class GndOntologyLabelTests {
+public class GndOntologyLabelTests extends IndexTest {
 
 	@Parameters(name = "{0} -> {1}")
 	public static Collection<Object[]> data() {
