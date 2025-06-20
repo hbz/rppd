@@ -209,7 +209,7 @@ public class AuthorityResource {
 	private Function<Pair<String, String>, Pair<String, String>> toLabelAndSearchUrl() {
 		return (Pair<String, String> labelTemplateAndUrlTemplate) -> {
 			String[] lastAndFirstName = preferredName.split(", ");
-			String name = lastAndFirstName[1] + " " + lastAndFirstName[0];
+			String name = lastAndFirstName.length == 2 ? lastAndFirstName[1] + " " + lastAndFirstName[0] : preferredName;
 			return Pair.of(
 					String.format(labelTemplateAndUrlTemplate.getLeft(), name),
 					String.format(labelTemplateAndUrlTemplate.getRight(), id));
