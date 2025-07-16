@@ -570,7 +570,7 @@ public class AuthorityResource {
 					.toCompletableFuture().get();
 			JsonNode entity = response.has("member") ? response.get("member").elements().next()
 					: response;
-			return entity.get("title").asText();
+			return Optional.ofNullable(entity.get("title")).map(JsonNode::asText).orElse(uri);
 		} catch (InterruptedException | ExecutionException e) {
 			Logger.error("Could not get label for {}", uri);
 			e.printStackTrace();
