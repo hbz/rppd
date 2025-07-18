@@ -93,6 +93,8 @@ import play.mvc.Result;
  */
 public class HomeController extends Controller implements WSBodyReadables, WSBodyWritables {
 
+	private static final String GND_ID_PATTERN = ".*gndIdentifier\":\"(.+?)\".*";
+
 	private final WSClient httpClient;
 
 	@Inject
@@ -741,8 +743,8 @@ public class HomeController extends Controller implements WSBodyReadables, WSBod
 	public Result robots() throws IOException {
 		return ok("User-agent: *\nDisallow: /"
 				+ Files.readAllLines(Paths.get("conf/rppd-export.jsonl")).stream()
-						.filter(line -> line.contains("doNotCrawl\":true"))
-						.map(line -> line.replaceAll(".*gndIdentifier\":\"(.+?)\".*", "$1")
+						.filter(line -> line.matches(GND_ID_PATTERN) && line.contains("doNotCrawl\":true"))
+						.map(line -> line.replaceAll(GND_ID_PATTERN, "$1")
 								.replaceAll("Keine GND-Ansetzung für ", ""))
 						.collect(Collectors.joining("\nDisallow: /")));
 	}
@@ -751,8 +753,8 @@ public class HomeController extends Controller implements WSBodyReadables, WSBod
 	public Result beacon() throws IOException {
 		Path path = Paths.get("conf/rppd-export.jsonl");
 		String gndIds = !path.toFile().exists() ? "" : Files.readAllLines(path).stream()
-				.filter(line -> line.contains("gndIdentifier") && !line.contains("Keine GND-Ansetzung"))
-				.map(line -> line.replaceAll(".*gndIdentifier\":\"(.+?)\".*", "$1"))
+				.filter(line -> line.matches(GND_ID_PATTERN) && !line.contains("Keine GND-Ansetzung"))
+				.map(line -> line.replaceAll(GND_ID_PATTERN, "$1"))
 				.collect(Collectors.joining("\n"));
 		return ok("#FORMAT: BEACON\n"
 				+ "#PREFIX: http://d-nb.info/gnd/\n"
