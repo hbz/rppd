@@ -29,6 +29,8 @@ public class HomeControllerTest extends IndexTest {
 		return Arrays.asList(new Object[][] { //
 				// index
 				{ routes.HomeController.index().toString(), Status.OK }, //
+				// beacon
+				{ routes.HomeController.beacon().toString(), Status.OK }, //
 				// search
 				{ routes.HomeController.search("*", "", "", "", "", "", "", "", 0, 10, "json").toString(), Status.OK },
 				{ routes.HomeController.search("*", "", "", "", "", "", "", "", 0, 10, "jsonl").toString(), Status.OK },
