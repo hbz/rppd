@@ -753,7 +753,7 @@ public class HomeController extends Controller implements WSBodyReadables, WSBod
 	public Result beacon() throws IOException {
 		Path path = Paths.get("conf/rppd-export.jsonl");
 		String gndIds = !path.toFile().exists() ? "" : Files.readAllLines(path).stream()
-				.filter(line -> line.matches(GND_ID_PATTERN) && !line.contains("Keine GND-Ansetzung"))
+				.filter(line -> line.matches(GND_ID_PATTERN) && !line.contains("Keine GND-Ansetzung") && !line.contains("doNotIndex\":true"))
 				.map(line -> line.replaceAll(GND_ID_PATTERN, "$1"))
 				.collect(Collectors.joining("\n"));
 		return ok("#FORMAT: BEACON\n"
