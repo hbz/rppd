@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -91,6 +92,8 @@ import play.mvc.Result;
  * application's home page.
  */
 public class HomeController extends Controller implements WSBodyReadables, WSBodyWritables {
+
+	private static final String GND_ID_PATTERN = ".*gndIdentifier\":\"(.+?)\".*";
 
 	private final WSClient httpClient;
 
@@ -740,10 +743,37 @@ public class HomeController extends Controller implements WSBodyReadables, WSBod
 	public Result robots() throws IOException {
 		return ok("User-agent: *\nDisallow: /"
 				+ Files.readAllLines(Paths.get("conf/rppd-export.jsonl")).stream()
-						.filter(line -> line.contains("doNotCrawl\":true"))
-						.map(line -> line.replaceAll(".*gndIdentifier\":\"(.+?)\".*", "$1")
+						.filter(line -> line.matches(GND_ID_PATTERN) && line.contains("doNotCrawl\":true"))
+						.map(line -> line.replaceAll(GND_ID_PATTERN, "$1")
 								.replaceAll("Keine GND-Ansetzung für ", ""))
 						.collect(Collectors.joining("\nDisallow: /")));
 	}
 
+	@Cached(key = "beacon", duration = 24 * 60 * 60) // One day
+	public Result beacon() throws IOException {
+		Path path = Paths.get("conf/rppd-export.jsonl");
+		String gndIds = !path.toFile().exists() ? "" : Files.readAllLines(path).stream()
+				.filter(line -> line.matches(GND_ID_PATTERN) && !line.contains("Keine GND-Ansetzung") && !line.contains("doNotIndex\":true"))
+				.map(line -> line.replaceAll(GND_ID_PATTERN, "$1"))
+				.collect(Collectors.joining("\n"));
+		return ok("#FORMAT: BEACON\n"
+				+ "#PREFIX: http://d-nb.info/gnd/\n"
+				+ "#TARGET: http://www.rppd-rlp.de/{ID}\n"
+				+ "#CONTACT: lobid-admin <lobid-admin@hbz-nrw.de>\n"
+				+ "#INSTITUTION: Landesbibliothekszentrum Rheinland-Pfalz (LBZ), Hochschulbibliothekszentrum des Landes Nordrhein-Westfalen (hbz)\n"
+				+ "#VERSION: 0.1\n"
+				+ "#NAME: RPPD: Rheinland-Pfälzische Personendatenbank\n"
+				+ "#MESSAGE: Kurzbiographien zu Personen, die dem Gebiet des heutigen Rheinland-Pfalz zugerechnet werden\n"
+				+ "#UPDATE: daily\n"
+				+ "#FEED: http://www.rppd-rlp.de/beacon.txt\n"
+				+ "#TIMESTAMP: " + generateTimestamp() + "\n"
+				+ gndIds);
+	}
+
+	public static String generateTimestamp() {
+		LocalDateTime now = LocalDateTime.now();
+		String day = now.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+		String time = String.format("%02d%02d%02d", now.getHour(), now.getMinute(), now.getSecond());
+		return String.format("%s_%s", day, time); // e.g. 20241129_013202
+	}
 }
