@@ -765,7 +765,7 @@ public class HomeController extends Controller implements WSBodyReadables, WSBod
 				+ "#NAME: RPPD: Rheinland-Pfälzische Personendatenbank\n"
 				+ "#MESSAGE: Kurzbiographien zu Personen, die dem Gebiet des heutigen Rheinland-Pfalz zugerechnet werden\n"
 				+ "#UPDATE: daily\n"
-				+ "#FEED: http://www.rppd-rlp.de/beacon.txt\n"
+				+ "#FEED: https://rppd.lobid.org/beacon.txt\n"
 				+ "#TIMESTAMP: " + generateTimestamp() + "\n"
 				+ gndIds);
 	}
