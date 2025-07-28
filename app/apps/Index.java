@@ -202,13 +202,13 @@ public class Index {
 				data = Normalizer.isNormalized(line, nfc) ? line : Normalizer.normalize(line, nfc);
 				bulkRequest.add(
 						client.prepareIndex(indexName, config("index.type"), id).setSource(data, XContentType.JSON));
+				if (pendingIndexRequests == 1000) {
+					executeBulk(pendingIndexRequests);
+					bulkRequest = client.prepareBulk();
+					pendingIndexRequests = 0;
+				}
 			}
 			currentLine++;
-			if (pendingIndexRequests == 1000) {
-				executeBulk(pendingIndexRequests);
-				bulkRequest = client.prepareBulk();
-				pendingIndexRequests = 0;
-			}
 		}
 		executeBulk(pendingIndexRequests);
 	}
