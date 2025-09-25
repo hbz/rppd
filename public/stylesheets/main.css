@@ -125,14 +125,6 @@ ul.facet li {
 	height: 80px;
 }
 
-.nrw-wappen {
-	height: 20px;
-}
-
-.hbz-logo {
-	height: 20px;
-}
-
 #search-results {
 	padding-top: 0em;
 }
@@ -363,4 +355,27 @@ figcaption {
 
 .page-header {
   border: none;
+}
+
+.navbar-default .navbar-nav>li>a {
+	color: #861a22;
+}
+
+.navbar-default .navbar-nav>li>a:hover,
+.navbar-default .navbar-nav>li>a:focus {
+	color: #BF2313;
+}
+
+.navbar-default .navbar-nav .dropdown-menu>li>a {
+	color: #861a22;
+}
+
+.navbar-default .navbar-nav .dropdown-menu>li>a:hover,
+.navbar-default .navbar-nav .dropdown-menu>li>a:focus {
+	color: #BF2313;
+}
+
+.navbar > .container-fluid .navbar-brand:hover,
+.navbar > .container-fluid .navbar-brand:focus {
+	color: #BF2313;
 }
