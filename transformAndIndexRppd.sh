@@ -10,9 +10,9 @@ bash transformRppd.sh
 cd -
 sbt -Dindex.prod.name=$INDEX "runMain apps.Index baseline"
 
-COUNT=$(curl -X POST "weywot3:9200/$INDEX/_count" | jq .count)
+COUNT=$(curl -X POST "indexcluster.lobid.org:9200/$INDEX/_count" | jq .count)
 if (( $COUNT > 10000 )) ; then
-    curl -X POST "weywot3:9200/_aliases?pretty" -H 'Content-Type: application/json' -d'
+    curl -X POST "indexcluster.lobid.org:9200/_aliases?pretty" -H 'Content-Type: application/json' -d'
         {
             "actions" : [
                 { "remove" : { "index" : "*", "alias" : "'"$ALIAS"'" } },
