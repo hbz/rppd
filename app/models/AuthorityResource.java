@@ -534,7 +534,7 @@ public class AuthorityResource {
 			boolean plainUriField = field.equals("source") || field.equals("publication");
 			String searchField = (field + (plainUriField ? "" : ".id")).replace("source",
 					"describedBy.source");
-			label = plainUriField && url.contains("lobid") ? labelFor(url) : label;
+			label = plainUriField ? (url.contains("lobid") ? labelFor(url) : url) : label;
 			String search = controllers.routes.HomeController
 					.search(qBasedSearch ? searchField + ":\"" + url + "\"" : "", "", "", "", "", "",
 							labelBasedFacet ? field + ".label:\"" + label + "\""
