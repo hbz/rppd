@@ -24,6 +24,7 @@ HOME="/home/sol"
 
 # it is important to set the proper locale
 . $HOME/.locale
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
 JAVA_OPTS=$(echo "$JAVA_OPTS" |sed 's#,#\ #g')
 
 cd $HOME/git/$REPO
