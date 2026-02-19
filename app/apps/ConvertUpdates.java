@@ -148,7 +148,7 @@ public class ConvertUpdates {
 			InputStreamReader inputStreamReader = new InputStreamReader(new ByteArrayInputStream(stream.toByteArray()),
 					StandardCharsets.UTF_8);
 			XMLEventReader eventReader = XMLInputFactory.newInstance().createXMLEventReader(inputStreamReader);
-			Iterator<?> namespaces = null;
+			Iterator<? extends javax.xml.stream.events.Namespace> namespaces = null;
 			while (eventReader.hasNext()) {
 				try {
 					XMLEvent nextEvent = eventReader.nextEvent();
