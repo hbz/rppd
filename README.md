@@ -1,12 +1,14 @@
-# About
+# rppd: Die Rheinland-Pfälzische Personendatenbank
 
-rppd: Die Rheinland-Pfälzische Personendatenbank
+## About
+
+Authority database for persons of RPB
 
 [![](https://github.com/hbz/rppd/actions/workflows/build.yml/badge.svg)](https://github.com/hbz/rppd/actions?query=workflow%3ABuild)
 
-# Setup
+## Setup
 
-## Prerequisites
+### Prerequisites
 
 Java 8
 
@@ -14,19 +16,19 @@ Java 8
 
 Elasticsearch 5.6.x (configured in `application.conf`, see `.github/workflows/build.yml` for local setup)
 
-## Build
+### Build
 
 Get the code, change into the project directory, and run the tests:
 
 `git clone https://github.com/hbz/rppd.git ; cd rppd ; sbt test`
 
-## Data
+### Data
 
 Production RPPD data is transformed and indexed in `transformAndIndexRppd.sh`.
 
 This requires a local <https://github.com/hbz/rpb> repo, in the same directory as the rppd repo.
 
-## Web
+### Web
 
 In 'rppd', run the web application:
 
@@ -38,7 +40,7 @@ To use the test data, disable `deleteIndexes` in `test/modules/IndexTest.java` a
 
 To use an existing Elasticsearch index on a different machine, configure the `prod` section in `conf/application.conf`.
 
-## Eclipse
+### Eclipse
 
 To set up an Eclipse project, first generate the Eclipse config for your machine:
 
