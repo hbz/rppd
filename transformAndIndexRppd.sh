@@ -8,7 +8,9 @@ ALIAS="gnd-rppd-test"
 cd ../rpb
 bash transformRppd.sh
 cd -
-sbt -Dindex.prod.name=$INDEX "runMain apps.Index baseline"
+
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
+sbt --java-home $JAVA_HOME -Dindex.prod.name=$INDEX "runMain apps.Index baseline"
 
 COUNT=$(curl -X POST "indexcluster.lobid.org:9200/$INDEX/_count" | jq .count)
 if (( $COUNT > 10000 )) ; then
