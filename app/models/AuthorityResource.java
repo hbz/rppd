@@ -94,6 +94,10 @@ public class AuthorityResource {
 		return id.replace(GND_PREFIX, "").replace(RPPD_PREFIX, "");
 	}
 
+	public String getRppdId() {
+		return json.get("rppdId").asText();
+	}
+
 	public String getFullId() {
 		return id;
 	}

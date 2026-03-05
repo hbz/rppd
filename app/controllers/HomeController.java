@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -499,6 +500,7 @@ public class HomeController extends Controller implements WSBodyReadables, WSBod
 			}
 			switch (responseFormat) {
 			case HTML: {
+				storeLastSearch(response, queryString, filter, sort, from, size);
 				return htmlSearch(q, name, place, subject, publication, date, filter, from, size,
 						responseFormat.queryParamString, response);
 			}
@@ -580,6 +582,23 @@ public class HomeController extends Controller implements WSBodyReadables, WSBod
 		return ok(views.html.search.render(q, name, place, subject, publication, date, type, from,
 				size, returnAsJson(q, response),
 				response == null ? 0 : response.getHits().getTotalHits(), allHits()));
+	}
+
+	private void storeLastSearch(SearchResponse response, String q, String filter, String sort,
+			int from, int size) {
+		String uuid = session("uuid");
+		if (uuid == null) {
+			uuid = UUID.randomUUID().toString();
+			session("uuid", uuid);
+		}
+		if (q != null && !q.contains("rppdId:")) {
+			List<String> ids = Arrays.asList(response.getHits().getHits()).stream()
+					.map(hit -> hit.getSource().get("rppdId").toString())
+					.collect(Collectors.toList());
+			session(uuid + "-lastSearch", Json.toJson(ids).toString());
+			session("lastSearchUrl", request().uri());
+			Logger.debug("Stored lastSearch for uuid {}: {} entries", uuid, ids.size());
+		}
 	}
 
 	static Result withCallback(final String json) {

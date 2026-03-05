@@ -3,6 +3,7 @@
 @(resource: models.AuthorityResource, allHits: Long)
 
 @import play.api.libs.json._
+@import play.mvc.Controller.session
 
 @image() = {
     <img src='https://lobid.org/imagesproxy?url=@resource.getImage.image' id="details-image" class="center-block" alt="Darstellung von @resource.preferredName"/>
@@ -20,6 +21,22 @@
             <span class="octicon octicon-diff-removed" aria-hidden="true"></span>
         </a>
     }
+}
+
+@prevNextLink(id: Option[String], label: String, tip: String) = {
+  <li class="@if(id.isEmpty){disabled}">
+    <a title="@tip" href=@if(id.isEmpty) {'#'} else {'@routes.HomeController.authority(id.getOrElse(""))'}>
+      @Html(label)
+    </a>
+  </li>
+}
+
+@pageLink(last: Seq[String], key: String, label: String, tip: String) = {
+  @defining(last.indexOf(resource.getRppdId())) { idx =>
+    @defining((if(idx > 0) Some(last(idx-1)) else None, if(idx < last.size-1) Some(last(idx+1)) else None)) { case (prevId, nextId) =>
+        @prevNextLink(if (key == "prev") prevId else nextId, label, tip)
+    }
+  }
 }
 
 @*@graph() = {
@@ -238,6 +255,21 @@
         </div>
         </small>
     </h1>
+    @defining(session.getOrElse(session.getOrElse("uuid", "") + "-lastSearch", null)) { lastSearch =>
+      @defining(session.getOrElse("lastSearchUrl", "")) { lastSearchUrl =>
+        @if(lastSearch != null && lastSearch != "") {
+          @defining(Json.parse(lastSearch).as[Seq[String]]) { last =>
+          <nav id="pager">
+            <ul class="pager">
+              @pageLink(last, "prev", "&larr;", "Voriger Treffer")
+              <li><a href="@lastSearchUrl">Treffer @(last.indexOf(resource.getRppdId)+1) von @last.size in der Trefferliste</a></li>
+              @pageLink(last, "next", "&rarr;", "Nächster Treffer")
+            </ul>
+          </nav>
+          }
+        }
+      }
+    }
     @*
     @if(resource.gndRelationEdges != "[]"){
     <ul class="nav nav-tabs" role="tablist">
