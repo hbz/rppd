@@ -22,6 +22,18 @@ jobs:
         wget ${{ env.ES_DOWNLOAD_URL }}
         tar -xzf elasticsearch-${{ env.ES_VERSION }}.tar.gz
         ./elasticsearch-${{ env.ES_VERSION }}/bin/elasticsearch &
+    - name: Wait for Elasticsearch to be ready
+      run: |
+        for i in {1..30}; do
+          if curl -s http://localhost:9200/_cluster/health > /dev/null 2>&1; then
+            echo "Elasticsearch is ready"
+            exit 0
+          fi
+          echo "Waiting for Elasticsearch... ($i/30)"
+          sleep 1
+        done
+        echo "Elasticsearch failed to start"
+        exit 1
     - name: Run tests
       uses: sbt/setup-sbt@v1
       with:
