@@ -56,7 +56,18 @@ public class Index {
 	private static final int BULK_SIZE = app.isTest() ? 5 : 1000;
 	
 	public static void main(String[] args) {
-		indexEntityFactsJsonLdDump();
+		List<String> options = Arrays.asList("baseline", "updates", "entityfacts");
+		if (args.length == 1 && options.contains(args[0])) {
+			if (args[0].equals(options.get(0))) {
+				index(indexName, client, config("data.jsonlines"), config("index.delete.baseline"));
+			} else if (args[0].equals(options.get(1))) {
+				index(indexName, client, config("data.updates.data"), config("index.delete.updates"));
+			} else {
+				indexEntityFactsJsonLdDump();
+			}
+		} else {
+			System.err.println("Pass one argument, on of " + options + ". See config/application.conf.");
+		}
 		client.close();
 		// Why is this required? Also needs 'trapExit := false' in build.sbt
 		System.exit(0);
