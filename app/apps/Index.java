@@ -132,7 +132,6 @@ public class Index {
 		client.admin().indices().refresh(new RefreshRequest()).actionGet();
 	}
 
-	// This is an confusing part from GND
 	public static IndexComponent indexBaselineAndUpdates() {
 		index(indexName, client, config("data.jsonlines"), config("index.delete.baseline"));
 		index(indexName, client, config("data.updates.data"), config("index.delete.updates"));
