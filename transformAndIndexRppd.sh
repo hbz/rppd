@@ -5,10 +5,12 @@ TIME=$(date "+%Y%m%d-%H%M")
 INDEX="gnd-rppd-$TIME"
 ALIAS="gnd-rppd-test"
 
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/
+
 cd ../rpb
 bash transformRppd.sh
 cd -
-sbt -Dindex.prod.name=$INDEX "runMain apps.Index baseline"
+sbt --java-home $JAVA_HOME -Dindex.prod.name=$INDEX "runMain apps.Index baseline"
 
 COUNT=$(curl -X POST "indexcluster.lobid.org:9200/$INDEX/_count" | jq .count)
 if (( $COUNT > 10000 )) ; then

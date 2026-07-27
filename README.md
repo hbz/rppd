@@ -10,7 +10,7 @@ Authority database for persons of RPB
 
 ### Prerequisites
 
-Java 8
+Java 11
 
 `sbt 0.13` or newer --- [download sbt](http://www.scala-sbt.org/download.html)
 
