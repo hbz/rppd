@@ -334,8 +334,6 @@ public class AuthorityResource {
 		if (depiction != null && depiction.size() > 0) {
 			String url = depiction.get(0).get("url").toString();
 			String image = depiction.get(0).get("id").toString();
-			Object thumbnail = depiction.get(0).get("thumbnail");
-			image = thumbnail != null ? thumbnail.toString() : image;
 			return new LinkWithImage(url, image, imageAttribution != null ? imageAttribution : url);
 		}
 		return new LinkWithImage("", "", "");
