@@ -391,9 +391,9 @@ public class HomeController extends Controller implements WSBodyReadables, WSBod
 	}
 
 	private String imageLinkWithDetails(AuthorityResource entity) {
-		String details = entity.getImage().image.contains("#")
-				? String.format("<small> (Bildquelle: %s)</small>",
-						entity.getImage().image.split("#")[1].replaceAll(".+@", ""))
+		String[] urlAndFragment = entity.getImage().image.split("#");
+		String details = urlAndFragment.length > 1
+				? String.format("<small> (Bildquelle: %s)</small>", urlAndFragment[1].replaceAll(".+@", ""))
 				: "";
 		return String.format("<a href='%s'>%s</a>%s", entity.getImage().url, formatName(entity.preferredName), details);
 	}
